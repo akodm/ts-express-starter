@@ -2,7 +2,7 @@ module.exports = {
 	apps: [
 		{
 			name: "SERVER",
-			script: "./build/bin/www.js",
+			script: "./build/app.js",
 			instances: 2,
 			autorestart: true,
 			watch: true,

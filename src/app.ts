@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './routes';
+import userRouter from './routes/user';
 import moment from 'moment';
 import './sequelize';
 moment.locale("ko"); // localization.
@@ -78,6 +79,7 @@ app.on("error", (error: any) => {
 
 // routes.
 app.use("/", indexRouter);
+app.use("/user", userRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   // Route Not Found.

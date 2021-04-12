@@ -8,6 +8,7 @@ import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './routes';
 import moment from 'moment';
+import './sequelize';
 moment.locale("ko"); // localization.
 
 // port setup.
@@ -44,11 +45,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));  // static folder.
 
 // app run.
-// + socket.io.
 app.listen(port, () => {
   console.log(`${process.env?.NODE_ENV} Hello Typescript-Express ! ${moment().format("YYYY. MM. DD. (ddd) HH:mm:ss")}`);
   process.send && process.send("ready");
 });
+
+// + app.io = socket.io
 
 // error.
 app.on("error", (error: any) => {
@@ -86,14 +88,18 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   /**
    * Route API Error Handling.
    * throw new Error: x.
-   * custom handling: return next({ s: statusCode, m: error message. });
+   * custom handling: return next({ s: status code, m: error message. });
    */
 
   const status = err.s ?? err.status ?? 500;
   const message = err.m ?? err.message ?? err;
 
   console.log(err);
-  return res.status(status).send(message);
+  return res.status(status).send({
+    result: false,
+    data: null,
+    message
+  });
 });
 
 export default app;

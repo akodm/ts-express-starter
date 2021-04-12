@@ -1,10 +1,11 @@
 import { Sequelize } from 'sequelize';
+import { userTable } from './models/user';
 
 console.log("mysql database connecting..");
 
 const { DB = "database", ROOT = "root", PASS = "pass", HOST = "localhost", DB_FORCE = "false", pm_id, NODE_ENV = "development" } = process.env;
 
-let sequelize = null;
+let sequelize: Sequelize;
 
 try {
 	sequelize = new Sequelize(
@@ -22,7 +23,7 @@ try {
   );
 	
 	const modelDefiners: any = [
-		// require('./models/[file name]'),
+		userTable
 	];
 	
 	for (const modelDefiner of modelDefiners) {
@@ -30,11 +31,14 @@ try {
 	}
 	
   // Models.
-	const {} = sequelize.models;
+	// const { user } = sequelize.models;
 
   /**
    * Models Associate.
    */
+
+	// user.hasMany(todo);
+	// todo.belongsTo(user);
 
   // DB Force Init.
 	let pmInit = false;

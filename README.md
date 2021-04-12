@@ -35,3 +35,11 @@ Route APi => throw new Eror: x. => return next({ s: status, m: message });
 ```md
 -   touch .env
 ```
+
+
+### To bd Update List.
+```md
+- dynamic route load.
+- dynamic models load.
+- socket.io setup.
+```

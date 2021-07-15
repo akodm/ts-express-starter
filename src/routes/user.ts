@@ -13,11 +13,9 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
     return res.status(200).send({
       result: true,
-      data
+      data,
     });
   } catch(err) {
-    err.status = err.status ?? 500;
-
     return next(err);
   }
 });

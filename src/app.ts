@@ -4,13 +4,19 @@ import path from 'path';
 import logger from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
-import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 import indexRouter from './routes';
 import userRouter from './routes/user';
 import moment from 'moment';
-import './sequelize';
+import sequelize from './sequelize';
 moment.locale("ko"); // localization.
+
+const { 
+  PORT = "3333",
+  DB_FORCE = "false", 
+	pm_id, 
+	NODE_ENV = "development",
+} = process.env;
 
 // port setup.
 const normalizePort = (val: string) => {
@@ -27,7 +33,7 @@ const normalizePort = (val: string) => {
   return false;
 }
 
-const port = normalizePort(process.env.PORT ?? "3333");
+const port = normalizePort(PORT);
 
 const app = express();
 
@@ -45,8 +51,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));  // static folder.
 
+// DB Force Init.
+let pmInit = false;
+
+if(NODE_ENV === "production") {
+  if(pm_id === "0") {
+    pmInit = true;
+  } else {
+    pmInit = false;
+  }
+} else {
+  pmInit = true;
+}
+
+const force = DB_FORCE === "true" ? true : false;
+
 // app run.
 app.listen(port, () => {
+  // DB Sync.
+  if(force && pmInit) {
+    sequelize.sync({ force });
+  } else {
+    sequelize.sync();
+  }
+
+  console.log("mysql database connect success !");
+
   console.log(`${process.env?.NODE_ENV} Hello Typescript-Express ! ${moment().format("YYYY. MM. DD. (ddd) HH:mm:ss")}`);
   process.send && process.send("ready");
 });
@@ -83,7 +113,7 @@ app.use("/user", userRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   // Route Not Found.
-  next(createError(404));
+  return next({ s: 404, m: "존재하지 않는 URL입니다." });
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
@@ -93,10 +123,11 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
    * custom handling: return next({ s: status code, m: error message. });
    */
 
-  const status = err.s ?? err.status ?? 500;
-  const message = err.m ?? err.message ?? err;
+  const status = err.s || err.status || 500;
+  const message = err.m || "문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
 
   console.log(err);
+
   return res.status(status).send({
     result: false,
     data: null,

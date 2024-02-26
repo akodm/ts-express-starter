@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import "./index";
+
 import cors from "cors";
 import logger from "morgan";
 import moment from "moment";

@@ -7,6 +7,7 @@ import moment from "moment";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
+import "moment/locale/ko";
 moment.locale("ko");
 
 import indexRouter from "./routes";

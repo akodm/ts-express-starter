@@ -8,12 +8,28 @@ import logger from "morgan";
 import moment from "moment";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import swaggerUI from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
 import express, { NextFunction, Request, Response } from "express";
 import "moment/locale/ko";
 moment.locale("ko");
 
 import indexRouter from "./routes";
 
+const swaggerSpec = swaggerJSDoc({
+  definition: {
+    info: {
+      title: "Mound API Docs",
+      description: "Mound API CURD Document",
+      version: "3.0.0",
+      contact: {
+        name: "Developer Email",
+        email: "junandyul2023@gmail.com",
+      },
+    },
+  },
+  apis: ["src/routes/*.ts"],
+})
 const app = express();
 
 const { PORT, NODE_ENV } = process.env;
@@ -26,6 +42,11 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
+app.use(
+  "/api-docs", 
+  swaggerUI.serve, 
+  swaggerUI.setup(swaggerSpec, { explorer: true })
+);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   next({ s: 404, m: "존재하지 않는 주소입니다." });

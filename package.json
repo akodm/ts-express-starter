@@ -22,6 +22,8 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.9.1",
     "reflect-metadata": "^0.2.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
@@ -32,6 +34,8 @@
     "@types/helmet": "^4.0.0",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.20",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "nodemon": "^3.1.0",
     "pm2": "^5.3.1",
     "ts-node": "^10.9.2",

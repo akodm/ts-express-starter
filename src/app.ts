@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import "./index";
-
 import cors from "cors";
 import logger from "morgan";
 import moment from "moment";
@@ -16,6 +15,12 @@ moment.locale("ko");
 
 import indexRouter from "./routes";
 
+const { 
+  PORT, 
+  NODE_ENV, 
+  SWAGGER_EMAIL, 
+} = process.env;
+
 const swaggerSpec = swaggerJSDoc({
   definition: {
     info: {
@@ -24,15 +29,13 @@ const swaggerSpec = swaggerJSDoc({
       version: "3.0.0",
       contact: {
         name: "Developer Email",
-        email: "junandyul2023@gmail.com",
+        email: SWAGGER_EMAIL,
       },
     },
   },
   apis: ["src/routes/*.ts"],
 })
 const app = express();
-
-const { PORT, NODE_ENV } = process.env;
 
 app.use(cors({ origin: "*" }));
 app.use(helmet());
